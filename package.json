@@ -1,0 +1,22 @@
+{
+  "name": "student-grade-management-system",
+  "version": "1.0.0",
+  "description": "Sistem Manajemen Nilai Siswa - Challenge 4",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "student",
+    "management",
+    "cli",
+    "oop"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  }
+}
