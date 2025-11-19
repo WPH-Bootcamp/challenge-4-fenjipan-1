@@ -19,7 +19,7 @@ class StudentManager {
   // - students: Array untuk menyimpan semua siswa
   
   constructor() {
-    // Implementasi constructor di sini
+   this.students = [];
   }
 
   /**
@@ -29,8 +29,22 @@ class StudentManager {
    * TODO: Validasi bahwa ID belum digunakan
    */
   addStudent(student) {
-    // Implementasi method di sini
+   if (!student || !student.id || !student.name) {
+      throw new Error('Data siswa tidak valid');
+    }
+    
+  
+    const found = this.findStudent(student.id);
+    
+    if (found !== null) {
+      return false; 
+    }
+    
+   
+    this.students.push(student);
+    return true; 
   }
+  
 
   /**
    * Menghapus siswa berdasarkan ID
@@ -39,7 +53,25 @@ class StudentManager {
    * TODO: Cari dan hapus siswa dari array
    */
   removeStudent(id) {
-    // Implementasi method di sini
+   
+    let position = -1;
+    
+    for (let i = 0; i < this.students.length; i++) {
+      if (this.students[i].id === id) {
+        position = i;
+        break; 
+      }
+    }
+    
+   
+    if (position === -1) {
+      return false;
+    }
+    
+    
+    this.students.splice(position, 1);
+    return true;
+    
   }
 
   /**
@@ -49,8 +81,16 @@ class StudentManager {
    * TODO: Gunakan method array untuk mencari siswa
    */
   findStudent(id) {
-    // Implementasi method di sini
+     // Loop semua siswa untuk cari yang ID-nya sama
+    for (let i = 0; i < this.students.length; i++) {
+      if (this.students[i].id === id) {
+        return this.students[i]; // Return siswa yang ketemu
+      }
+    }
+    
+    return null; // Kalau tidak ketemu, return null
   }
+  
 
   /**
    * Update data siswa
@@ -60,15 +100,43 @@ class StudentManager {
    * TODO: Cari siswa dan update propertinya
    */
   updateStudent(id, data) {
-    // Implementasi method di sini
+   // Cari siswa dulu
+    const student = this.findStudent(id);
+    
+    // Kalau tidak ketemu
+    if (student === null) {
+      return false;
+    }
+    
+    // Update nama kalau ada
+    if (data.name !== undefined && data.name !== null) {
+      // Cek nama tidak boleh kosong
+      if (data.name === '') {
+        throw new Error('Nama siswa tidak boleh kosong');
+      }
+      student.name = data.name;
+    }
+    
+   
+    if (data.class !== undefined && data.class !== null) {
+      student.class = data.class;
+    }
+    
+   
+    if (data.grades !== undefined && data.grades !== null) {
+      student.grades = data.grades;
+    }
+    
+    return true; 
   }
 
   /**
    * Mendapatkan semua siswa
+
    * @returns {Array} Array berisi semua siswa
    */
   getAllStudents() {
-    // Implementasi method di sini
+     return this.students;
   }
 
   /**
@@ -78,7 +146,36 @@ class StudentManager {
    * TODO: Sort siswa berdasarkan rata-rata (descending) dan ambil n teratas
    */
   getTopStudents(n) {
-    // Implementasi method di sini
+ 
+    if (typeof n !== 'number' || n < 1) {
+      n = 3;
+    }
+    
+   
+    const sortedStudents = [];
+    for (let i = 0; i < this.students.length; i++) {
+      sortedStudents.push(this.students[i]);
+    }
+    
+   
+    for (let i = 0; i < sortedStudents.length - 1; i++) {
+      for (let j = 0; j < sortedStudents.length - i - 1; j++) {
+        if (sortedStudents[j].getAverage() < sortedStudents[j + 1].getAverage()) {
+        
+          const temp = sortedStudents[j];
+          sortedStudents[j] = sortedStudents[j + 1];
+          sortedStudents[j + 1] = temp;
+        }
+      }
+    }
+    
+   
+    const topStudents = [];
+    for (let i = 0; i < n && i < sortedStudents.length; i++) {
+      topStudents.push(sortedStudents[i]);
+    }
+    
+    return topStudents;
   }
 
   /**
@@ -86,8 +183,20 @@ class StudentManager {
    * TODO: Loop semua siswa dan panggil displayInfo() untuk masing-masing
    */
   displayAllStudents() {
-    // Implementasi method di sini
+    if (this.students.length === 0) {
+      console.log("Tidak ada siswa dalam sistem.");
+      return;
+    }
+    
+    console.log("\n========== DAFTAR SEMUA SISWA ==========\n");
+    
+    // Loop dan tampilkan info setiap siswa
+    for (let i = 0; i < this.students.length; i++) {
+      this.students[i].displayInfo();
+      console.log("\n");
+    }
   }
+  
 
   /**
    * BONUS: Mendapatkan siswa berdasarkan kelas
